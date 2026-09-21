@@ -198,3 +198,172 @@ body {
   color: #7ba7ff;
   text-decoration: none;
 }
+
+/* ---------- 登录页 ---------- */
+.login-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 36px 28px 32px;
+  box-shadow: 0 4px 16px rgba(31, 35, 41, 0.08);
+}
+
+.login-title {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.login-sub {
+  font-size: 13px;
+  color: #8f959e;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.login-field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.login-field span {
+  display: block;
+  font-size: 13px;
+  color: #41464f;
+  margin-bottom: 6px;
+}
+
+.login-field input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #d5d9e0;
+  border-radius: 8px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.login-field input:focus {
+  border-color: #3370ff;
+}
+
+.login-error {
+  font-size: 13px;
+  color: #e24b4a;
+  margin: -4px 0 12px;
+}
+
+.login-submit {
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: 10px;
+  background: #3370ff;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.login-submit:hover {
+  background: #2959d6;
+}
+
+.login-submit:active {
+  background: #1f4ac2;
+}
+
+/* 顶栏退出按钮 */
+.logout {
+  margin-left: 12px;
+  font-size: 13px;
+  color: #8f959e;
+  text-decoration: none;
+}
+
+.logout:hover {
+  color: #3370ff;
+}
+
+/* 课程切换 */
+.switch-wrap {
+  position: relative;
+  margin-left: auto;
+}
+
+.switch-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid #d5d9e0;
+  border-radius: 16px;
+  background: #fff;
+  color: #41464f;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.switch-btn:active {
+  background: #f0f1f3;
+}
+
+.switch-arrow {
+  font-size: 10px;
+  color: #8f959e;
+}
+
+.switch-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  padding: 6px;
+  background: #fff;
+  border: 1px solid #ebedf0;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(31, 35, 41, 0.12);
+  z-index: 200;
+}
+
+.switch-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1f2329;
+  cursor: pointer;
+}
+
+.switch-item:hover {
+  background: #f0f3ff;
+}
+
+.switch-item.active {
+  color: #3370ff;
+  background: #eef3ff;
+}
+
+.switch-item-check {
+  display: none;
+  font-size: 13px;
+}
+
+.switch-item.active .switch-item-check {
+  display: inline;
+}

@@ -32,6 +32,12 @@
   <script src="libs/tcplayer/tcplayer.v5.3.4.min.js"></script>
   <script>
     (function () {
+      // 登录校验：未登录跳转登录页
+      if (sessionStorage.getItem("video_login") !== "1") {
+        location.replace("login.html");
+        return;
+      }
+
       var errorEl = document.getElementById("player-error");
       var errorText = document.getElementById("player-error-text");
 
@@ -42,7 +48,13 @@
 
       var params = new URLSearchParams(location.search);
       var id = params.get("id");
-      var course = (window.COURSES || []).find(function (c) { return c.id === id; });
+      // 在所有课程的课节里按 id 查找
+      var course = null;
+      (window.COURSES || []).forEach(function (c) {
+        (c.lessons || []).forEach(function (l) {
+          if (l.id === id) { course = l; }
+        });
+      });
 
       if (!course) {
         showError("未找到该课节");

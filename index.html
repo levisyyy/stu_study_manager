@@ -8,11 +8,16 @@
 </head>
 <body>
   <header class="topbar">
-    <span class="title">在线课程</span>
+    <span class="title" id="course-name">在线课程</span>
+    <div class="switch-wrap">
+      <button class="switch-btn" id="switch-btn" aria-haspopup="true">切换 <span class="switch-arrow">&#9662;</span></button>
+      <div class="switch-menu" id="switch-menu" hidden></div>
+    </div>
+    <a class="logout" href="login.html" id="logout-btn">退出</a>
   </header>
 
   <main class="page">
-    <p class="section-label">课节列表</p>
+    <p class="section-label" id="section-label">课节列表</p>
     <div id="course-list"></div>
     <p id="empty-tip" class="empty-tip" hidden>暂无课节</p>
   </main>
@@ -20,36 +25,105 @@
   <script src="courses.js"></script>
   <script>
     (function () {
-      var listEl = document.getElementById("course-list");
-      var emptyTip = document.getElementById("empty-tip");
-      var courses = window.COURSES || [];
-
-      if (!courses.length) {
-        emptyTip.hidden = false;
+      // 登录校验：未登录跳转登录页
+      if (sessionStorage.getItem("video_login") !== "1") {
+        location.replace("login.html");
         return;
       }
+
+      // 退出登录
+      document.getElementById("logout-btn").addEventListener("click", function (e) {
+        e.preventDefault();
+        sessionStorage.removeItem("video_login");
+        location.replace("login.html");
+      });
+
+      var courses = window.COURSES || [];
+      var defaultId = window.DEFAULT_COURSE_ID || (courses[0] && courses[0].id);
+      // 记住上次选择的课程，没有则用默认课程
+      var savedId = localStorage.getItem("selected_course");
+      var currentId = courses.some(function (c) { return c.id === savedId; }) ? savedId : defaultId;
+
+      var nameEl = document.getElementById("course-name");
+      var labelEl = document.getElementById("section-label");
+      var listEl = document.getElementById("course-list");
+      var emptyTip = document.getElementById("empty-tip");
+      var menuEl = document.getElementById("switch-menu");
+      var btnEl = document.getElementById("switch-btn");
 
       var ICON_VIDEO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l10.6-6.86a1.03 1.03 0 0 0 0-1.76L9.56 4.26A1.03 1.03 0 0 0 8 5.14z"/></svg>';
       var ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l10.6-6.86a1.03 1.03 0 0 0 0-1.76L9.56 4.26A1.03 1.03 0 0 0 8 5.14z"/></svg>';
 
-      courses.forEach(function (course) {
-        var card = document.createElement("div");
-        card.className = "course-card";
-        card.innerHTML =
-          '<div class="course-thumb">' + ICON_VIDEO + "</div>" +
-          '<div class="course-info">' +
-            '<div class="course-name"></div>' +
-            '<div class="course-desc"></div>' +
-          "</div>" +
-          '<a class="play-btn">' + ICON_PLAY + "<span>播放</span></a>";
+      function currentCourse() {
+        return courses.filter(function (c) { return c.id === currentId; })[0];
+      }
 
-        card.querySelector(".course-name").textContent = course.title;
-        card.querySelector(".course-desc").textContent = course.desc || "";
-        card.querySelector(".play-btn").href =
-          "player.html?id=" + encodeURIComponent(course.id);
+      function renderList() {
+        var course = currentCourse();
+        listEl.innerHTML = "";
+        var lessons = (course && course.lessons) || [];
 
-        listEl.appendChild(card);
+        nameEl.textContent = course ? course.name : "在线课程";
+        document.title = course ? course.name : "在线课程";
+        labelEl.textContent = "课节列表 · 共 " + lessons.length + " 节";
+
+        if (!lessons.length) {
+          emptyTip.hidden = false;
+          return;
+        }
+        emptyTip.hidden = true;
+
+        lessons.forEach(function (lesson) {
+          var card = document.createElement("div");
+          card.className = "course-card";
+          card.innerHTML =
+            '<div class="course-thumb">' + ICON_VIDEO + "</div>" +
+            '<div class="course-info">' +
+              '<div class="course-name"></div>' +
+              '<div class="course-desc"></div>' +
+            "</div>" +
+            '<a class="play-btn">' + ICON_PLAY + "<span>播放</span></a>";
+
+          card.querySelector(".course-name").textContent = lesson.title;
+          card.querySelector(".course-desc").textContent = lesson.desc || "";
+          card.querySelector(".play-btn").href =
+            "player.html?id=" + encodeURIComponent(lesson.id);
+
+          listEl.appendChild(card);
+        });
+      }
+
+      function renderMenu() {
+        menuEl.innerHTML = "";
+        courses.forEach(function (c) {
+          var item = document.createElement("div");
+          item.className = "switch-item" + (c.id === currentId ? " active" : "");
+          item.setAttribute("role", "button");
+          item.innerHTML = '<span class="switch-item-name"></span><span class="switch-item-check">&#10003;</span>';
+          item.querySelector(".switch-item-name").textContent = c.name;
+          item.addEventListener("click", function () {
+            currentId = c.id;
+            localStorage.setItem("selected_course", c.id);
+            menuEl.hidden = true;
+            renderList();
+            renderMenu();
+          });
+          menuEl.appendChild(item);
+        });
+      }
+
+      btnEl.addEventListener("click", function (e) {
+        e.stopPropagation();
+        menuEl.hidden = !menuEl.hidden;
       });
+
+      document.addEventListener("click", function () {
+        menuEl.hidden = true;
+      });
+      menuEl.addEventListener("click", function (e) { e.stopPropagation(); });
+
+      renderList();
+      renderMenu();
     })();
   </script>
 </body>

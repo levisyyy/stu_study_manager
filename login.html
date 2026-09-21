@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>登录 · 在线课程</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+  <main class="login-card">
+    <h1 class="login-title">在线课程</h1>
+    <p class="login-sub">请登录后观看课程</p>
+    <form id="login-form" autocomplete="off">
+      <label class="login-field">
+        <span>账号</span>
+        <input id="login-user" type="text" placeholder="请输入账号" required>
+      </label>
+      <label class="login-field">
+        <span>密码</span>
+        <input id="login-pass" type="password" placeholder="请输入密码" required>
+      </label>
+      <p id="login-error" class="login-error" hidden>账号或密码错误</p>
+      <button type="submit" class="login-submit">登 录</button>
+    </form>
+  </main>
+
+  <script src="courses.js"></script>
+  <script>
+    (function () {
+      // 已登录则直接进入列表页
+      if (sessionStorage.getItem("video_login") === "1") {
+        location.replace("index.html");
+        return;
+      }
+
+      var form = document.getElementById("login-form");
+      var userEl = document.getElementById("login-user");
+      var passEl = document.getElementById("login-pass");
+      var errEl = document.getElementById("login-error");
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var auth = window.SITE_AUTH || {};
+        if (userEl.value === auth.username && passEl.value === auth.password) {
+          sessionStorage.setItem("video_login", "1");
+          location.replace("index.html");
+        } else {
+          errEl.hidden = false;
+          passEl.value = "";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
