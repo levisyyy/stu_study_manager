@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>在线课程</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <span class="title">在线课程</span>
+  </header>
+
+  <main class="page">
+    <p class="section-label">课节列表</p>
+    <div id="course-list"></div>
+    <p id="empty-tip" class="empty-tip" hidden>暂无课节</p>
+  </main>
+
+  <script src="courses.js"></script>
+  <script>
+    (function () {
+      var listEl = document.getElementById("course-list");
+      var emptyTip = document.getElementById("empty-tip");
+      var courses = window.COURSES || [];
+
+      if (!courses.length) {
+        emptyTip.hidden = false;
+        return;
+      }
+
+      var ICON_VIDEO = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l10.6-6.86a1.03 1.03 0 0 0 0-1.76L9.56 4.26A1.03 1.03 0 0 0 8 5.14z"/></svg>';
+      var ICON_PLAY = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.14v13.72c0 .8.87 1.3 1.56.88l10.6-6.86a1.03 1.03 0 0 0 0-1.76L9.56 4.26A1.03 1.03 0 0 0 8 5.14z"/></svg>';
+
+      courses.forEach(function (course) {
+        var card = document.createElement("div");
+        card.className = "course-card";
+        card.innerHTML =
+          '<div class="course-thumb">' + ICON_VIDEO + "</div>" +
+          '<div class="course-info">' +
+            '<div class="course-name"></div>' +
+            '<div class="course-desc"></div>' +
+          "</div>" +
+          '<a class="play-btn">' + ICON_PLAY + "<span>播放</span></a>";
+
+        card.querySelector(".course-name").textContent = course.title;
+        card.querySelector(".course-desc").textContent = course.desc || "";
+        card.querySelector(".play-btn").href =
+          "player.html?id=" + encodeURIComponent(course.id);
+
+        listEl.appendChild(card);
+      });
+    })();
+  </script>
+</body>
+</html>

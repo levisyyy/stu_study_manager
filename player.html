@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>播放</title>
+  <link rel="stylesheet" href="libs/xgplayer/index.min.css">
+  <link rel="stylesheet" href="libs/tcplayer/tcplayer.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="player-page">
+  <header class="topbar">
+    <a class="back" href="index.html" aria-label="返回">&#8592;</a>
+    <span class="title" id="course-title">视频播放</span>
+  </header>
+
+  <div class="player-wrap">
+    <!-- xgplayer 容器（普通直链课节） -->
+    <div id="xg-player"></div>
+    <!-- TCPlayer 容器（云点播加密课节，必须是 video 标签） -->
+    <video id="tc-player" class="tc-player" hidden playsinline webkit-playsinline preload="auto"></video>
+    <div id="player-error" class="player-error" hidden>
+      <p id="player-error-text">视频加载失败</p>
+      <a href="index.html">返回课节列表</a>
+    </div>
+  </div>
+
+  <script src="courses.js"></script>
+  <script src="libs/xgplayer/index.min.js"></script>
+  <!-- TCPlayer 及其 HLS 依赖 -->
+  <script src="libs/tcplayer/libs/hls.min.js"></script>
+  <script src="libs/tcplayer/tcplayer.v5.3.4.min.js"></script>
+  <script>
+    (function () {
+      var errorEl = document.getElementById("player-error");
+      var errorText = document.getElementById("player-error-text");
+
+      function showError(msg) {
+        errorText.textContent = msg;
+        errorEl.hidden = false;
+      }
+
+      var params = new URLSearchParams(location.search);
+      var id = params.get("id");
+      var course = (window.COURSES || []).find(function (c) { return c.id === id; });
+
+      if (!course) {
+        showError("未找到该课节");
+        return;
+      }
+
+      document.getElementById("course-title").textContent = course.title;
+      document.title = course.title;
+
+      if (course.type === "vod") {
+        // ===== 腾讯云点播 SimpleAES 加密课节：TCPlayer + fileID + psign =====
+        if (!course.psign) {
+          showError("该课节尚未配置播放器签名 psign：请到云点播控制台 → 分发播放 → 播放器签名工具生成（加密类型选 SimpleAES，码流模板选 12），然后填入 courses.js 对应课节的 psign 字段");
+          return;
+        }
+        var tcEl = document.getElementById("tc-player");
+        tcEl.hidden = false;
+        var vodOpts = {
+          appID: String(course.appID),
+          fileID: String(course.fileID),
+          psign: course.psign,
+          // TCPlayer 5.0+ 必传；License 绑定域名，正式部署与 courses.js 中 domain 一致即可
+          licenseUrl: course.licenseUrl || "http://127.0.0.1:8088/v_cube.license",
+          // 域名校验：License 绑定的是正式域名，本地 localhost 对不上会报 Error 52
+          // 通过 domain 参数手动指定 License 已绑定的域名即可通过（5.2.0+ 支持）
+          domain: course.domain
+        };
+        TCPlayer(tcEl, vodOpts);
+      } else {
+        // ===== 普通直链课节：xgplayer =====
+        var player = new Player({
+          id: "xg-player",
+          url: course.url,
+          width: "100%",
+          height: "100%",
+          autoplay: true,
+          playsinline: true,
+          videoInit: true,
+          rotate: {
+            fullscreen: true,
+            innerRotate: true
+          },
+          fullscreen: {
+            useCssFullscreen: true
+          },
+          download: false,
+          playbackRate: [0.5, 1, 1.25, 1.5, 2]
+        });
+
+        player.on("error", function () {
+          showError("视频加载失败，请检查网络后重试");
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

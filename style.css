@@ -1,0 +1,200 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+  background: #f5f6f8;
+  color: #1f2329;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- 通用顶栏 ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 52px;
+  padding: 0 16px;
+  background: #fff;
+  border-bottom: 1px solid #ebedf0;
+}
+
+.topbar .back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #1f2329;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.topbar .back:active {
+  background: #f0f1f3;
+}
+
+.topbar .title {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- 课节列表页 ---------- */
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.section-label {
+  font-size: 13px;
+  color: #8f959e;
+  margin: 4px 2px 12px;
+}
+
+.course-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(31, 35, 41, 0.06);
+}
+
+.course-thumb {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #3370ff 0%, #7ba7ff 100%);
+  color: #fff;
+}
+
+.course-thumb svg {
+  width: 24px;
+  height: 24px;
+}
+
+.course-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.course-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.course-desc {
+  font-size: 12px;
+  color: #8f959e;
+}
+
+.play-btn {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 34px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 17px;
+  background: #3370ff;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.play-btn:hover {
+  background: #2959d6;
+}
+
+.play-btn:active {
+  background: #1f4ac2;
+}
+
+.play-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.empty-tip {
+  text-align: center;
+  color: #8f959e;
+  font-size: 14px;
+  padding: 60px 0;
+}
+
+/* ---------- 播放页 ---------- */
+.player-page {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  background: #000;
+}
+
+.player-wrap {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+#xg-player {
+  position: absolute;
+  inset: 0;
+}
+
+/* TCPlayer 容器（云点播加密课节） */
+.tc-player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+}
+
+.player-error {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #bbb;
+  font-size: 14px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.player-error a {
+  color: #7ba7ff;
+  text-decoration: none;
+}
