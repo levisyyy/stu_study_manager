@@ -32,8 +32,8 @@
   <script src="libs/tcplayer/tcplayer.v5.3.4.min.js"></script>
   <script>
     (function () {
-      // 登录校验：未登录跳转登录页
-      if (sessionStorage.getItem("video_login") !== "1") {
+      // 登录校验：未登录跳转登录页（localStorage 永久保存）
+      if (localStorage.getItem("video_login") !== "1") {
         location.replace("login.html");
         return;
       }

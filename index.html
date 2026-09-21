@@ -25,8 +25,8 @@
   <script src="courses.js"></script>
   <script>
     (function () {
-      // 登录校验：未登录跳转登录页
-      if (sessionStorage.getItem("video_login") !== "1") {
+      // 登录校验：未登录跳转登录页（localStorage 永久保存，仅"退出"可清除）
+      if (localStorage.getItem("video_login") !== "1") {
         location.replace("login.html");
         return;
       }
@@ -34,7 +34,7 @@
       // 退出登录
       document.getElementById("logout-btn").addEventListener("click", function (e) {
         e.preventDefault();
-        sessionStorage.removeItem("video_login");
+        localStorage.removeItem("video_login");
         location.replace("login.html");
       });
 

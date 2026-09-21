@@ -28,7 +28,7 @@
   <script>
     (function () {
       // 已登录则直接进入列表页
-      if (sessionStorage.getItem("video_login") === "1") {
+      if (localStorage.getItem("video_login") === "1") {
         location.replace("index.html");
         return;
       }
@@ -42,7 +42,7 @@
         e.preventDefault();
         var auth = window.SITE_AUTH || {};
         if (userEl.value === auth.username && passEl.value === auth.password) {
-          sessionStorage.setItem("video_login", "1");
+          localStorage.setItem("video_login", "1");
           location.replace("index.html");
         } else {
           errEl.hidden = false;
