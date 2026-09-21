@@ -39,10 +39,10 @@ window.COURSES = [
         fileID: "5001834821483851066",
         // 用控制台「播放器签名工具」生成（过期时间可不填=永久有效）
         psign: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6MTI1NzMwNjE0MCwiZmlsZUlkIjoiNTAwMTgzNDgyMTQ4Mzg1MTA2NiIsImN1cnJlbnRUaW1lU3RhbXAiOjE3OTAwMTQ4NTAsImNvbnRlbnRJbmZvIjp7ImF1ZGlvVmlkZW9UeXBlIjoiUHJvdGVjdGVkQWRhcHRpdmUiLCJkcm1BZGFwdGl2ZUluZm8iOnsicHJpdmF0ZUVuY3J5cHRpb25EZWZpbml0aW9uIjoxMn19LCJ1cmxBY2Nlc3NJbmZvIjp7ImRvbWFpbiI6IjEyNTczMDYxNDAudm9kLXFjbG91ZC5jb20iLCJzY2hlbWUiOiJIVFRQUyJ9fQ.jVkcRJ3nzmSff8xgaPkWZRAgTzucfS_yBT_AKeqvy2s",
-        // 视立方控制台申请的 Web 播放器基础版 License（免费/一年），绑定域名 lessyysry.com
+        // 视立方控制台申请的 Web 播放器基础版 License（免费/一年）
         licenseUrl: "https://1257306140.trtcube-license.cn/license/v2/1257306140_1/v_cube.license",
-        // License 绑定的域名（本地 localhost 调试时播放器用它通过域名校验）
-        domain: "lessyysry.com"
+        // License 绑定的域名（线上部署在 GitHub Pages；本地 localhost 调试时播放器用它通过域名校验）
+        domain: "levisyyy.github.io"
       }
     ]
   },

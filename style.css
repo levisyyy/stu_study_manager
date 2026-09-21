@@ -194,6 +194,11 @@ body {
   padding: 0 24px;
 }
 
+/* hidden 属性必须能压过上面的 display:flex，否则正常播放时也会显示 */
+.player-error[hidden] {
+  display: none;
+}
+
 .player-error a {
   color: #7ba7ff;
   text-decoration: none;
