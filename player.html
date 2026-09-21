@@ -64,25 +64,34 @@
       document.getElementById("course-title").textContent = course.title;
       document.title = course.title;
 
-      if (course.type === "vod") {
-        // ===== 腾讯云点播 SimpleAES 加密课节：TCPlayer + fileID + psign =====
-        if (!course.psign) {
+      if (course.type === "vod" || course.type === "tcplayer") {
+        // ===== 腾讯云课节：TCPlayer（加密 fileID+psign / 不加密直链） =====
+        if (course.type === "vod" && !course.psign) {
           showError("该课节尚未配置播放器签名 psign：请到云点播控制台 → 分发播放 → 播放器签名工具生成（加密类型选 SimpleAES，码流模板选 12），然后填入 courses.js 对应课节的 psign 字段");
           return;
         }
         var tcEl = document.getElementById("tc-player");
         tcEl.hidden = false;
-        var vodOpts = {
-          appID: String(course.appID),
-          fileID: String(course.fileID),
-          psign: course.psign,
-          // TCPlayer 5.0+ 必传；License 绑定域名，正式部署与 courses.js 中 domain 一致即可
-          licenseUrl: course.licenseUrl || "http://127.0.0.1:8088/v_cube.license",
-          // 域名校验：License 绑定的是正式域名，本地 localhost 对不上会报 Error 52
-          // 通过 domain 参数手动指定 License 已绑定的域名即可通过（5.2.0+ 支持）
-          domain: course.domain
-        };
-        TCPlayer(tcEl, vodOpts);
+        var cfg = window.VOD_CONFIG || {};
+        if (course.type === "tcplayer") {
+          // ===== 腾讯云不加密直链：TCPlayer URL 播放（License 必传） =====
+          TCPlayer(tcEl, {
+            sources: [{ src: course.url }],
+            licenseUrl: course.licenseUrl || cfg.licenseUrl,
+            domain: course.domain || cfg.domain
+          });
+        } else {
+          // ===== SimpleAES 加密课节：TCPlayer + fileID + psign =====
+          TCPlayer(tcEl, {
+            appID: String(course.appID),
+            fileID: String(course.fileID),
+            psign: course.psign,
+            licenseUrl: course.licenseUrl || cfg.licenseUrl,
+            // 域名校验：License 绑定的是正式域名，本地 localhost 对不上会报 Error 52
+            // 通过 domain 参数手动指定 License 已绑定的域名即可通过（5.2.0+ 支持）
+            domain: course.domain || cfg.domain
+          });
+        }
       } else {
         // ===== 普通直链课节：xgplayer =====
         var player = new Player({
@@ -104,8 +113,20 @@
           playbackRate: [0.5, 1, 1.25, 1.5, 2]
         });
 
+        // 移动端（微信/自动播放被拦截等）会偶发误报 error 事件，
+        // 需先确认 video 元素真的出错才显示提示；播放成功则确保提示隐藏
         player.on("error", function () {
-          showError("视频加载失败，请检查网络后重试");
+          setTimeout(function () {
+            var v = player.video;
+            if (v && v.error) {
+              showError("视频加载失败，请检查网络后重试");
+            } else {
+              errorEl.hidden = true;
+            }
+          }, 600);
+        });
+        player.on("play", function () {
+          errorEl.hidden = true;
         });
       }
     })();
